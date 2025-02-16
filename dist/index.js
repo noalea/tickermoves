@@ -27,9 +27,9 @@ function fetchLatestPressReleases() {
             const url = 'https://www.nasdaq.com/api/news/topic/press_release';
             const { data } = yield axios_1.default.get(url, { headers: headers_1.headers });
             const news = ((_a = data === null || data === void 0 ? void 0 : data.data) === null || _a === void 0 ? void 0 : _a.rows) || [];
-            console.log('news', news);
-            const connection = (0, db_1.createConnection)();
-            console.log('connection', connection);
+            news.forEach((article) => __awaiter(this, void 0, void 0, function* () {
+                console.log('isNewRelease', yield (0, db_1.isNewRelease)(article));
+            }));
         }
         catch (error) {
             console.error("Error fetching data:", error);

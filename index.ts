@@ -1,6 +1,8 @@
 import axios from "axios";
 import { headers } from "./constants/headers";
-import { createConnection } from "./db";
+import { isNewRelease } from "./db";
+
+import type { NasdaqNews } from "types";
 
 // Job that runs every 5 minutes
 
@@ -13,11 +15,12 @@ async function fetchLatestPressReleases(): Promise<void> {
   try {
     const url = 'https://www.nasdaq.com/api/news/topic/press_release';
     const { data } = await axios.get(url, { headers });
-    const news = data?.data?.rows || [];
-    console.log('news', news);
+    const news: NasdaqNews[] = data?.data?.rows || [];
 
-    const connection = createConnection();
-    console.log('connection', connection);
+    news.forEach(async article => {
+      console.log('isNewRelease', await isNewRelease(article));
+    })
+
 
   } catch (error) {
     console.error("Error fetching data:", error);
