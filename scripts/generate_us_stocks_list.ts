@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { headers } from "../constants/headers";
 const fs = require('fs');
 
 type Stock = {
@@ -22,10 +23,7 @@ async function fetchUSStocks() {
       let config = {
         timeout: 10000,
         url,
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
-          'Accept': 'application/json'
-        }
+        headers
       };
   
       const response = await axios.get(config.url, config);

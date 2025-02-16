@@ -1,33 +1,27 @@
 import axios from "axios";
-import Parser from "rss-parser";
+import { headers } from "./constants/headers";
+import { createConnection } from "./db";
 
-const RSS_URL: string = "https://ir.bigbear.ai/news-events/press-releases/rss";
+// Job that runs every 5 minutes
 
-interface FeedItem {
-  title: string;
-  pubDate: string;
-}
+// Go through nasdaq.com press releases
+// Find new ones (haven't been recorded yet)
+// Ask AI if likely or not to go up
+// Record data and notify user
 
-async function fetchLatestNews(): Promise<void> {
+async function fetchLatestPressReleases(): Promise<void> {
   try {
-    const parser: Parser = new Parser();
-    const response = await axios.get(RSS_URL);
-    const feed = await parser.parseString(response.data);
+    const url = 'https://www.nasdaq.com/api/news/topic/press_release';
+    const { data } = await axios.get(url, { headers });
+    const news = data?.data?.rows || [];
+    console.log('news', news);
 
-    const today: string = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
-    console.log("TODAY", today)
+    const connection = createConnection();
+    console.log('connection', connection);
 
-    feed.items.forEach((item) => {
-        console.log('item', item);
-      const pubDate: string = new Date((item as FeedItem).pubDate).toISOString().split("T")[0];
-      console.log('pubDate', pubDate);
-      if (pubDate === today) {
-        console.log(`Title: ${item.title}`);
-      }
-    });
   } catch (error) {
-    console.error("Error fetching or parsing RSS feed:", (error as Error).message);
+    console.error("Error fetching data:", error);
   }
 }
 
-fetchLatestNews();
+fetchLatestPressReleases();

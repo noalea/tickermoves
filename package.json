@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npx tsc; node dist/index.js",
-    "generate-us-sources": "npx tsc ./scripts/generate_us_stocks_list.ts; node ./scripts/generate_us_stocks_list.js",
+    "generate-us-stocks-list": "npx tsc ./scripts/generate_us_stocks_list.ts; node dist/scripts/generate_us_stocks_list.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,7 +13,9 @@
   "description": "",
   "dependencies": {
     "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
     "fs": "^0.0.1-security",
+    "mysql2": "^3.12.0",
     "rss-parser": "^3.13.0"
   },
   "devDependencies": {

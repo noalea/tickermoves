@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
+var headers_1 = require("../constants/headers");
 var fs = require('fs');
 var EXCHANGES = ['nasdaq', 'nyse'];
 function fetchUSStocks() {
@@ -58,10 +59,7 @@ function fetchUSStocks() {
                                     config = {
                                         timeout: 10000,
                                         url: url,
-                                        headers: {
-                                            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
-                                            'Accept': 'application/json'
-                                        }
+                                        headers: headers_1.headers
                                     };
                                     return [4 /*yield*/, axios_1.default.get(config.url, config)];
                                 case 1:

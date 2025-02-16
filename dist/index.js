@@ -13,28 +13,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const rss_parser_1 = __importDefault(require("rss-parser"));
-const RSS_URL = "https://ir.bigbear.ai/news-events/press-releases/rss";
-function fetchLatestNews() {
+const headers_1 = require("./constants/headers");
+const db_1 = require("./db");
+// Job that runs every 5 minutes
+// Go through nasdaq.com press releases
+// Find new ones (haven't been recorded yet)
+// Ask AI if likely or not to go up
+// Record data and notify user
+function fetchLatestPressReleases() {
     return __awaiter(this, void 0, void 0, function* () {
+        var _a;
         try {
-            const parser = new rss_parser_1.default();
-            const response = yield axios_1.default.get(RSS_URL);
-            const feed = yield parser.parseString(response.data);
-            const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
-            console.log("TODAY", today);
-            feed.items.forEach((item) => {
-                console.log('item', item);
-                const pubDate = new Date(item.pubDate).toISOString().split("T")[0];
-                console.log('pubDate', pubDate);
-                if (pubDate === today) {
-                    console.log(`Title: ${item.title}`);
-                }
-            });
+            const url = 'https://www.nasdaq.com/api/news/topic/press_release';
+            const { data } = yield axios_1.default.get(url, { headers: headers_1.headers });
+            const news = ((_a = data === null || data === void 0 ? void 0 : data.data) === null || _a === void 0 ? void 0 : _a.rows) || [];
+            console.log('news', news);
+            const connection = (0, db_1.createConnection)();
+            console.log('connection', connection);
         }
         catch (error) {
-            console.error("Error fetching or parsing RSS feed:", error.message);
+            console.error("Error fetching data:", error);
         }
     });
 }
-fetchLatestNews();
+fetchLatestPressReleases();
