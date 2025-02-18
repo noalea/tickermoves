@@ -33,13 +33,13 @@ export default class Database {
     return Database.instance;
   }
 
-  query(query: string, params = []) {
+  query<T = any>(query: string, params: any[] = []): Promise<T[]> {
     return new Promise((resolve, reject) => {
       this.connection.query(query, params, (err, results) => {
         if (err) {
           reject(err);
         } else {
-          resolve(results);
+          resolve(results as T[]);
         }
       });
     });

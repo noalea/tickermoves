@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const headers_1 = require("../constants/headers");
+const constants_1 = require("../constants");
 const fs = require('fs');
 const EXCHANGES = ['nasdaq', 'nyse'];
 function fetchUSStocks() {
@@ -26,7 +26,7 @@ function fetchUSStocks() {
                 let config = {
                     timeout: 10000,
                     url,
-                    headers: headers_1.headers
+                    headers: constants_1.headers
                 };
                 const response = yield axios_1.default.get(config.url, config);
                 const data = response.data;

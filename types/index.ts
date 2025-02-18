@@ -11,3 +11,11 @@ export type NasdaqNews = {
   title: string;
   url: string;
 }
+
+export type ArticleRow = {
+  id: number;
+  tickers: string;
+  title: string;
+  url: string;
+  created: string;
+}

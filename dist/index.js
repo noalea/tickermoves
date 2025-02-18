@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-const headers_1 = require("./constants/headers");
+const constants_1 = require("./constants");
 const db_1 = require("./db");
 // Job that runs every 5 minutes
 // Go through nasdaq.com press releases
@@ -25,11 +25,22 @@ function fetchLatestPressReleases() {
         var _a;
         try {
             const url = 'https://www.nasdaq.com/api/news/topic/press_release';
-            const { data } = yield axios_1.default.get(url, { headers: headers_1.headers });
+            const { data } = yield axios_1.default.get(url, { headers: constants_1.headers });
             const news = ((_a = data === null || data === void 0 ? void 0 : data.data) === null || _a === void 0 ? void 0 : _a.rows) || [];
             news.forEach((article) => __awaiter(this, void 0, void 0, function* () {
-                console.log('isNewRelease', yield (0, db_1.isNewRelease)(article));
+                const isNewArticle = yield (0, db_1.isNewRelease)(article);
+                console.log('isNewArticle', isNewArticle);
+                if (isNewArticle) {
+                    // add to db
+                    yield (0, db_1.recordRelease)(article);
+                }
+                else {
+                    // do nothing
+                    return;
+                }
             }));
+            // const db = Database.getInstance();
+            // db.close();
         }
         catch (error) {
             console.error("Error fetching data:", error);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { headers } from "../constants/headers";
+import { headers } from "../constants";
 const fs = require('fs');
 
 type Stock = {
