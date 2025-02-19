@@ -19,3 +19,8 @@ export type ArticleRow = {
   url: string;
   created: string;
 }
+
+export type ArticleAnalysis = {
+  analysis: 'Most Likely' | 'Likely' | 'Unsure' | 'Unlikely';
+  reasoning: string;
+}

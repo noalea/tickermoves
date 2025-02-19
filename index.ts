@@ -1,7 +1,7 @@
 import axios from "axios";
-import { headers } from "./constants";
+import { headers, nasdaqHost } from "./constants";
 import { isNewRelease, recordRelease } from "./db";
-import Database from "./db/database";
+import { analyzePressRelease } from "./ai";
 
 import type { NasdaqNews } from "types";
 
@@ -19,17 +19,31 @@ async function fetchLatestPressReleases(): Promise<void> {
     const { data } = await axios.get(url, { headers });
     const news: NasdaqNews[] = data?.data?.rows || [];
 
-    news.forEach(async article => {
+    for (const article of [news[0]]) {
+      // Skip articles without tagged tickers
+      if (!article.related_symbols.length) {
+        continue;
+      }
+
       const isNewArticle = await isNewRelease(article);
-      console.log('isNewArticle', isNewArticle);
       if (isNewArticle) {
+        // get ai analysis
+        const url = `${nasdaqHost}${article.url}`;
+        const ticker = article.related_symbols[0].replace(/\|stocks/g, '');
+        const analysis = await analyzePressRelease({ url, ticker });
+        console.log('analysis', analysis);
+        // TODO: add analysis to db
+
         // add to db
-        await recordRelease(article);
+        // await recordRelease(article);
+
+        // notify user
+
       } else {
         // do nothing
-        return;
+        continue;
       }
-    });
+    };
 
     // const db = Database.getInstance();
     // db.close();

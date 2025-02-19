@@ -15,11 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const constants_1 = require("./constants");
 const db_1 = require("./db");
+const ai_1 = require("./ai");
 // Job that runs every 5 minutes
 // Go through nasdaq.com press releases
 // Find new ones (haven't been recorded yet)
 // Ask AI if likely or not to go up
-// Record data and notify user
+// Record data
+// Notify user
 function fetchLatestPressReleases() {
     return __awaiter(this, void 0, void 0, function* () {
         var _a;
@@ -27,18 +29,31 @@ function fetchLatestPressReleases() {
             const url = 'https://www.nasdaq.com/api/news/topic/press_release';
             const { data } = yield axios_1.default.get(url, { headers: constants_1.headers });
             const news = ((_a = data === null || data === void 0 ? void 0 : data.data) === null || _a === void 0 ? void 0 : _a.rows) || [];
-            news.forEach((article) => __awaiter(this, void 0, void 0, function* () {
+            for (const article of [news[0]]) {
+                // Skip articles without tagged tickers
+                if (!article.related_symbols.length) {
+                    continue;
+                }
                 const isNewArticle = yield (0, db_1.isNewRelease)(article);
-                console.log('isNewArticle', isNewArticle);
+                // console.log('isNewArticle', isNewArticle);
                 if (isNewArticle) {
+                    // get ai analysis
+                    console.log('article', article);
+                    const url = `${constants_1.nasdaqHost}${article.url}`;
+                    const ticker = article.related_symbols[0].replace(/\|stocks/g, '');
+                    console.log('analyzePressRelease', article.title);
+                    const analysis = yield (0, ai_1.analyzePressRelease)({ url, ticker });
+                    console.log('analysis', analysis);
                     // add to db
-                    yield (0, db_1.recordRelease)(article);
+                    // await recordRelease(article);
+                    // notify user
                 }
                 else {
                     // do nothing
-                    return;
+                    continue;
                 }
-            }));
+            }
+            ;
             // const db = Database.getInstance();
             // db.close();
         }

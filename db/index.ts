@@ -5,7 +5,6 @@ import { getCurrentTimestamp } from '../utils';
 import type { ArticleRow, NasdaqNews } from "types";
 
 export async function isNewRelease(article: NasdaqNews) {
-  console.log('article', article);
   const db = Database.getInstance();
 
   try {
