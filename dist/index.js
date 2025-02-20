@@ -13,9 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
+const database_1 = __importDefault(require("./db/database"));
 const constants_1 = require("./constants");
 const db_1 = require("./db");
 const ai_1 = require("./ai");
+const utils_1 = require("./utils");
 // Job that runs every 5 minutes
 // Go through nasdaq.com press releases
 // Find new ones (haven't been recorded yet)
@@ -29,23 +31,19 @@ function fetchLatestPressReleases() {
             const url = 'https://www.nasdaq.com/api/news/topic/press_release';
             const { data } = yield axios_1.default.get(url, { headers: constants_1.headers });
             const news = ((_a = data === null || data === void 0 ? void 0 : data.data) === null || _a === void 0 ? void 0 : _a.rows) || [];
-            for (const article of [news[0]]) {
+            for (const article of news) {
                 // Skip articles without tagged tickers
                 if (!article.related_symbols.length) {
                     continue;
                 }
                 const isNewArticle = yield (0, db_1.isNewRelease)(article);
-                // console.log('isNewArticle', isNewArticle);
                 if (isNewArticle) {
                     // get ai analysis
-                    console.log('article', article);
-                    const url = `${constants_1.nasdaqHost}${article.url}`;
+                    const url = (0, utils_1.nasdaqUrl)(article.url);
                     const ticker = article.related_symbols[0].replace(/\|stocks/g, '');
-                    console.log('analyzePressRelease', article.title);
                     const analysis = yield (0, ai_1.analyzePressRelease)({ url, ticker });
-                    console.log('analysis', analysis);
                     // add to db
-                    // await recordRelease(article);
+                    yield (0, db_1.recordRelease)(Object.assign(Object.assign({}, article), analysis));
                     // notify user
                 }
                 else {
@@ -54,8 +52,8 @@ function fetchLatestPressReleases() {
                 }
             }
             ;
-            // const db = Database.getInstance();
-            // db.close();
+            const db = database_1.default.getInstance();
+            db.close();
         }
         catch (error) {
             console.error("Error fetching data:", error);

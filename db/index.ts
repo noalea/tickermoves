@@ -1,14 +1,13 @@
 import Database from "./database";
-import { nasdaqHost } from "../constants";
-import { getCurrentTimestamp } from '../utils';
+import { getCurrentTimestamp, nasdaqUrl } from '../utils';
 
-import type { ArticleRow, NasdaqNews } from "types";
+import type { ArticleAnalysis, ArticleRow, NasdaqNews } from "types";
 
 export async function isNewRelease(article: NasdaqNews) {
   const db = Database.getInstance();
 
   try {
-    const results = await db.query<ArticleRow>("SELECT * FROM releases WHERE url = ?", [article.url]);
+    const results = await db.query<ArticleRow>("SELECT * FROM releases WHERE url = ?", [nasdaqUrl(article.url)]);
     return !results.length;
 
   } catch (error) {
@@ -17,14 +16,14 @@ export async function isNewRelease(article: NasdaqNews) {
   return false;
 }
 
-export async function recordRelease(article: NasdaqNews) {
+export async function recordRelease(article: NasdaqNews & (ArticleAnalysis | undefined)) {
   const db = Database.getInstance();
 
   try {
-    const url = `${nasdaqHost}${article.url}`;
+    const url = nasdaqUrl(article.url);
     const created = getCurrentTimestamp();
     const tickers = article.related_symbols.toString().replace(/\|stocks/g, '');
-    const id = await db.query("INSERT INTO releases (tickers, title, url, created) VALUES (?, ?, ?, ?)", [tickers, article.title, url, created]);
+    await db.query("INSERT INTO releases (tickers, title, url, created, analysis, analysis_reasoning) VALUES (?, ?, ?, ?, ?, ?)", [tickers, article.title, url, created, article.analysis, article.reasoning]);
 
   } catch (error) {
     console.error('Database error:', error);

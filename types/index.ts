@@ -12,15 +12,15 @@ export type NasdaqNews = {
   url: string;
 }
 
+export type ArticleAnalysis = {
+  analysis: 'Most Likely' | 'Likely' | 'Unsure' | 'Unlikely';
+  reasoning: string;
+}
+
 export type ArticleRow = {
   id: number;
   tickers: string;
   title: string;
   url: string;
   created: string;
-}
-
-export type ArticleAnalysis = {
-  analysis: 'Most Likely' | 'Likely' | 'Unsure' | 'Unlikely';
-  reasoning: string;
-}
+} & ArticleAnalysis;

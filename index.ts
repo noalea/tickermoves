@@ -1,7 +1,9 @@
 import axios from "axios";
-import { headers, nasdaqHost } from "./constants";
+import Database from "./db/database";
+import { headers } from "./constants";
 import { isNewRelease, recordRelease } from "./db";
 import { analyzePressRelease } from "./ai";
+import { nasdaqUrl } from "./utils";
 
 import type { NasdaqNews } from "types";
 
@@ -19,7 +21,7 @@ async function fetchLatestPressReleases(): Promise<void> {
     const { data } = await axios.get(url, { headers });
     const news: NasdaqNews[] = data?.data?.rows || [];
 
-    for (const article of [news[0]]) {
+    for (const article of news) {
       // Skip articles without tagged tickers
       if (!article.related_symbols.length) {
         continue;
@@ -28,14 +30,12 @@ async function fetchLatestPressReleases(): Promise<void> {
       const isNewArticle = await isNewRelease(article);
       if (isNewArticle) {
         // get ai analysis
-        const url = `${nasdaqHost}${article.url}`;
+        const url = nasdaqUrl(article.url);
         const ticker = article.related_symbols[0].replace(/\|stocks/g, '');
         const analysis = await analyzePressRelease({ url, ticker });
-        console.log('analysis', analysis);
-        // TODO: add analysis to db
 
         // add to db
-        // await recordRelease(article);
+        await recordRelease({ ...article, ...analysis });
 
         // notify user
 
@@ -45,8 +45,8 @@ async function fetchLatestPressReleases(): Promise<void> {
       }
     };
 
-    // const db = Database.getInstance();
-    // db.close();
+    const db = Database.getInstance();
+    db.close();
 
   } catch (error) {
     console.error("Error fetching data:", error);

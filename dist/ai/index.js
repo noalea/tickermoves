@@ -55,18 +55,15 @@ dotenv_1.default.config();
 const openai = new openai_1.default({ apiKey: process.env.OPENAI_API_KEY });
 function analyzePressRelease(_a) {
     return __awaiter(this, arguments, void 0, function* ({ url, ticker }) {
-        var _b, _c, _d, _e, _f, _g, _h;
+        var _b, _c, _d, _e;
         try {
             // Fetch press release content
-            // console.log('url', url);
             const response = yield (0, node_fetch_1.default)(url, { headers: constants_1.headers });
-            // console.log('response', response);
             if (!response.ok)
                 throw new Error("Failed to fetch the press release");
             const text = yield response.text();
             const $ = cheerio.load(text);
             const articleText = $('article').text();
-            // console.log('text', text);
             // Ask OpenAI for analysis
             const prompt = `
       Here's a press release:
@@ -74,7 +71,7 @@ function analyzePressRelease(_a) {
 
       Do you think this press release will make the stock ${ticker} go up?
       Answer with "Most Likely", "Likely", "Unsure", or "Unlikely" and provide a short reasoning.
-      Return only a valid JSON object with:
+      Respond in the following JSON format:
       {
         "analysis": "'Most Likely', 'Likely', 'Unsure', or 'Unlikely'",
         "reasoning": "Short explanation"
@@ -85,12 +82,11 @@ function analyzePressRelease(_a) {
                 messages: [{ role: "system", content: "You are a financial analyst." }, { role: "user", content: prompt }],
                 temperature: 0.5,
             });
-            console.log('content', (_c = (_b = aiResponse === null || aiResponse === void 0 ? void 0 : aiResponse.choices[0]) === null || _b === void 0 ? void 0 : _b.message) === null || _c === void 0 ? void 0 : _c.content);
-            return JSON.parse(((_h = (_g = (_f = (_e = (_d = aiResponse === null || aiResponse === void 0 ? void 0 : aiResponse.choices[0]) === null || _d === void 0 ? void 0 : _d.message) === null || _e === void 0 ? void 0 : _e.content) === null || _f === void 0 ? void 0 : _f.trim()) === null || _g === void 0 ? void 0 : _g.replace(/```json|```/g, '')) === null || _h === void 0 ? void 0 : _h.trim()) || '');
+            return JSON.parse(((_e = (_d = (_c = (_b = aiResponse === null || aiResponse === void 0 ? void 0 : aiResponse.choices[0]) === null || _b === void 0 ? void 0 : _b.message) === null || _c === void 0 ? void 0 : _c.content) === null || _d === void 0 ? void 0 : _d.replace(/```json|```/g, '')) === null || _e === void 0 ? void 0 : _e.trim()) || '');
         }
         catch (error) {
-            console.error("Error analyzing press release:", error);
-            return "Error";
+            console.error("Error analyzing press release: ", error);
+            return { analysis: '', reasoning: '' };
         }
     });
 }

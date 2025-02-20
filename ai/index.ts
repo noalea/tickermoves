@@ -46,6 +46,6 @@ export async function analyzePressRelease({ url, ticker }: Props) {
     return JSON.parse(aiResponse?.choices[0]?.message?.content?.replace(/```json|```/g, '')?.trim() || '') as ArticleAnalysis;
   } catch (error) {
     console.error("Error analyzing press release: ", error);
-    return;
+    return { analysis: '' as ArticleAnalysis['analysis'], reasoning: '' };
   }
 }
