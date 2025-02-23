@@ -18,6 +18,7 @@ const constants_1 = require("./constants");
 const db_1 = require("./db");
 const ai_1 = require("./ai");
 const utils_1 = require("./utils");
+const messaging_1 = require("./messaging");
 // Job that runs every 5 minutes
 // Go through nasdaq.com press releases
 // Find new ones (haven't been recorded yet)
@@ -45,6 +46,7 @@ function fetchLatestPressReleases() {
                     // add to db
                     yield (0, db_1.recordRelease)(Object.assign(Object.assign({}, article), analysis));
                     // notify user
+                    yield (0, messaging_1.notifyUsers)(Object.assign(Object.assign({}, article), analysis));
                 }
                 else {
                     // do nothing

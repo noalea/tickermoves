@@ -4,6 +4,7 @@ import { headers } from "./constants";
 import { isNewRelease, recordRelease } from "./db";
 import { analyzePressRelease } from "./ai";
 import { nasdaqUrl } from "./utils";
+import { notifyUsers } from "./messaging";
 
 import type { NasdaqNews } from "types";
 
@@ -38,7 +39,7 @@ async function fetchLatestPressReleases(): Promise<void> {
         await recordRelease({ ...article, ...analysis });
 
         // notify user
-
+        await notifyUsers({ ...article, ...analysis });
       } else {
         // do nothing
         continue;
