@@ -20,7 +20,7 @@ function isNewRelease(article) {
     return __awaiter(this, void 0, void 0, function* () {
         const db = database_1.default.getInstance();
         try {
-            const results = yield db.query("SELECT * FROM releases WHERE url = ?", [(0, utils_1.nasdaqUrl)(article.url)]);
+            const results = yield db.query("SELECT * FROM releases WHERE url = ? OR title = ?", [(0, utils_1.nasdaqUrl)(article.url), article.title]);
             return !results.length;
         }
         catch (error) {

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const axios_1 = __importDefault(require("axios"));
+const puppeteer_1 = __importDefault(require("puppeteer"));
 const database_1 = __importDefault(require("./db/database"));
 const constants_1 = require("./constants");
 const db_1 = require("./db");
@@ -27,11 +27,19 @@ const messaging_1 = require("./messaging");
 // Notify user
 function fetchLatestPressReleases() {
     return __awaiter(this, void 0, void 0, function* () {
-        var _a;
+        var _a, _b;
         try {
             const url = 'https://www.nasdaq.com/api/news/topic/press_release';
-            const { data } = yield axios_1.default.get(url, { headers: constants_1.headers });
-            const news = ((_a = data === null || data === void 0 ? void 0 : data.data) === null || _a === void 0 ? void 0 : _a.rows) || [];
+            const browser = yield puppeteer_1.default.launch(utils_1.puppeteerLaunchOptions);
+            const page = yield browser.newPage();
+            // Navigate to the desired web page
+            yield page.setUserAgent(constants_1.headers["User-Agent"]);
+            yield page.goto(url);
+            const data = yield page.evaluate(() => {
+                return document.body.innerText;
+            });
+            yield browser.close();
+            const news = ((_b = (_a = JSON.parse(data)) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.rows) || [];
             for (const article of news) {
                 // Skip articles without tagged tickers
                 if (!article.related_symbols.length) {

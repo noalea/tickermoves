@@ -1,9 +1,10 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
-import fetch from "node-fetch";
-import * as cheerio from "cheerio";
+import puppeteer from "puppeteer";
 import { headers } from "../constants";
-import { ArticleAnalysis } from "types";
+import { puppeteerLaunchOptions } from "../utils";
+
+import type { ArticleAnalysis } from "types";
 
 dotenv.config();
 
@@ -17,11 +18,17 @@ interface Props {
 export async function analyzePressRelease({ url, ticker }: Props) {
   try {
     // Fetch press release content
-    const response = await fetch(url, { headers });
-    if (!response.ok) throw new Error("Failed to fetch the press release");
-    const text = await response.text();
-    const $ = cheerio.load(text);
-    const articleText = $('article').text();
+    const browser = await puppeteer.launch(puppeteerLaunchOptions);
+    const page = await browser.newPage();
+
+    // Navigate to the desired web page
+    await page.setUserAgent(headers["User-Agent"]);
+    await page.goto(url, { timeout: 60000, waitUntil: 'domcontentloaded' });
+    const articleText = await page.evaluate(() => {
+      return document.querySelector('article')?.innerText?.trim();
+    });
+
+    await browser.close();
 
     // Ask OpenAI for analysis
     const prompt = `

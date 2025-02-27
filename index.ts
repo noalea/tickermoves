@@ -1,9 +1,9 @@
-import axios from "axios";
+import puppeteer from "puppeteer";
 import Database from "./db/database";
 import { headers } from "./constants";
 import { isNewRelease, recordRelease } from "./db";
 import { analyzePressRelease } from "./ai";
-import { nasdaqUrl } from "./utils";
+import { nasdaqUrl, puppeteerLaunchOptions } from "./utils";
 import { notifyUsers } from "./messaging";
 
 import type { NasdaqNews } from "types";
@@ -19,8 +19,19 @@ import type { NasdaqNews } from "types";
 async function fetchLatestPressReleases(): Promise<void> {
   try {
     const url = 'https://www.nasdaq.com/api/news/topic/press_release';
-    const { data } = await axios.get(url, { headers });
-    const news: NasdaqNews[] = data?.data?.rows || [];
+    const browser = await puppeteer.launch(puppeteerLaunchOptions);
+    const page = await browser.newPage();
+
+    // Navigate to the desired web page
+    await page.setUserAgent(headers["User-Agent"]);
+    await page.goto(url);
+    const data = await page.evaluate(() => {
+      return document.body.innerText;
+    });
+
+    await browser.close();
+
+    const news: NasdaqNews[] = JSON.parse(data)?.data?.rows || [];
 
     for (const article of news) {
       // Skip articles without tagged tickers
