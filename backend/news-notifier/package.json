@@ -1,5 +1,5 @@
 {
-  "name": "stock-news-scraper",
+  "name": "news-notifier",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
