@@ -7,7 +7,7 @@ export async function isNewRelease(article: NasdaqNews) {
   const db = Database.getInstance();
 
   try {
-    const results = await db.query<ArticleRow>("SELECT * FROM releases WHERE url = ?", [nasdaqUrl(article.url)]);
+    const results = await db.query<ArticleRow>("SELECT * FROM releases WHERE url = ? OR title = ?", [nasdaqUrl(article.url), article.title]);
     return !results.length;
 
   } catch (error) {
