@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "478653857874",
+    "project_id": "stockmovers-8d3ee",
+    "storage_bucket": "stockmovers-8d3ee.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478653857874:android:c24789ee2615874d619f8b",
+        "android_client_info": {
+          "package_name": "com.stockmovers"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxZVGEJBTVzIAaZb5NsgRbeX3HmF8yJpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
