@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyAr6-fKpF0lU08u0s9fMlvMIJH2mvmCgZI</string>
+	<string>AIzaSyBW7j5aLVCkKGmOzMTMPqeSlDW1rc67kJs</string>
 	<key>GCM_SENDER_ID</key>
-	<string>478653857874</string>
+	<string>587335628704</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.stockmovers</string>
+	<string>com.tickermoves</string>
 	<key>PROJECT_ID</key>
-	<string>stockmovers-8d3ee</string>
+	<string>tickermoves</string>
 	<key>STORAGE_BUCKET</key>
-	<string>stockmovers-8d3ee.firebasestorage.app</string>
+	<string>tickermoves.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:478653857874:ios:a44af07163f72e0e619f8b</string>
+	<string>1:587335628704:ios:fdf3c79b44f74674d356c5</string>
 </dict>
 </plist>

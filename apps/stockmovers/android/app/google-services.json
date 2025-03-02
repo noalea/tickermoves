@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "478653857874",
-    "project_id": "stockmovers-8d3ee",
-    "storage_bucket": "stockmovers-8d3ee.firebasestorage.app"
+    "project_number": "587335628704",
+    "project_id": "tickermoves",
+    "storage_bucket": "tickermoves.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:478653857874:android:c24789ee2615874d619f8b",
+        "mobilesdk_app_id": "1:587335628704:android:f1e8a26854301af1d356c5",
         "android_client_info": {
-          "package_name": "com.stockmovers"
+          "package_name": "com.tickermoves"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBxZVGEJBTVzIAaZb5NsgRbeX3HmF8yJpw"
+          "current_key": "AIzaSyBs9Pd9mpjLqI7DTWx7kNSo8dA2_OF1Qz0"
         }
       ],
       "services": {
