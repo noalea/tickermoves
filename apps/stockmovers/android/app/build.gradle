@@ -78,9 +78,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.stockmovers"
+    namespace "com.tickermoves"
     defaultConfig {
-        applicationId "com.stockmovers"
+        applicationId "com.tickermoves"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

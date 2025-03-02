@@ -16,7 +16,7 @@ end
 
 $RNFirebaseAsStaticFramework = true
 
-target 'stockmovers' do
+target 'tickermoves' do
   config = use_native_modules!
 
   use_react_native!(

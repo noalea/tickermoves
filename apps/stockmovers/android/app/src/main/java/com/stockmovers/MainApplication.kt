@@ -1,4 +1,4 @@
-package com.stockmovers
+package com.tickermoves
 
 import android.app.Application
 import com.facebook.react.PackageList

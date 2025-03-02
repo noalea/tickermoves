@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "stockmovers.app"
-               BlueprintName = "stockmovers"
-               ReferencedContainer = "container:stockmovers.xcodeproj">
+               BuildableName = "tickermoves.app"
+               BlueprintName = "tickermoves"
+               ReferencedContainer = "container:tickermoves.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "stockmoversTests.xctest"
-               BlueprintName = "stockmoversTests"
-               ReferencedContainer = "container:stockmovers.xcodeproj">
+               BuildableName = "tickermovesTests.xctest"
+               BlueprintName = "tickermovesTests"
+               ReferencedContainer = "container:tickermoves.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "stockmovers.app"
-            BlueprintName = "stockmovers"
-            ReferencedContainer = "container:stockmovers.xcodeproj">
+            BuildableName = "tickermoves.app"
+            BlueprintName = "tickermoves"
+            ReferencedContainer = "container:tickermoves.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "stockmovers.app"
-            BlueprintName = "stockmovers"
-            ReferencedContainer = "container:stockmovers.xcodeproj">
+            BuildableName = "tickermoves.app"
+            BlueprintName = "tickermoves"
+            ReferencedContainer = "container:tickermoves.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
