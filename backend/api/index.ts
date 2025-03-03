@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/press-releases", pressReleaseRoutes);
+app.use("/press-releases", pressReleaseRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
