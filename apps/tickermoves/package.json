@@ -8,12 +8,13 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "clean-android": "cd android; ./gradlew clean; cd..",
+    "clean-android": "cd android; ./gradlew clean; cd ..",
     "ios-pods": "cd ios; bundle exec pod install; cd .."
   },
   "dependencies": {
     "@react-native-firebase/app": "^21.11.0",
     "@react-native-firebase/messaging": "^21.11.0",
+    "@tickermoves/shared-types": "workspace:*",
     "react": "19.0.0",
     "react-native": "0.78.0",
     "react-native-push-notification": "^8.1.1"

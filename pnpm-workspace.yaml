@@ -1,0 +1,4 @@
+packages:
+  - "apps/*"       # Includes all projects in apps/
+  - "backend/*"    # Includes all projects in backend/
+  - "packages/*"   # Includes shared packages like types
