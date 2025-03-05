@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
+import { ApiResponse, PressReleasesResponse } from "@tickermoves/shared-types";
+
 import { fetchPressReleases } from "../services/pressReleaseService";
 
-export const getPressReleases = async (req: Request, res: Response): Promise<void> => {
+export const getPressReleases = async (req: Request, res: Response<ApiResponse<PressReleasesResponse>>): Promise<void> => {
     try {
         const limit = parseInt(req.query.limit as string) || 10;
         const page = parseInt(req.query.page as string) || 1;
@@ -9,7 +11,7 @@ export const getPressReleases = async (req: Request, res: Response): Promise<voi
 
         res.json({
             success: true,
-            ...pressReleases,
+            data: pressReleases,
         });
     } catch (error) {
         console.error("Error fetching press releases:", error);

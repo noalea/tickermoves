@@ -16,7 +16,10 @@ const getPressReleases = (req, res) => __awaiter(void 0, void 0, void 0, functio
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
         const pressReleases = yield (0, pressReleaseService_1.fetchPressReleases)(limit, page);
-        res.json(Object.assign({ success: true }, pressReleases));
+        res.json({
+            success: true,
+            data: pressReleases,
+        });
     }
     catch (error) {
         console.error("Error fetching press releases:", error);

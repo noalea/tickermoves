@@ -1,5 +1,6 @@
 import { RowDataPacket } from "mysql2";
 import pool from "../config/db";
+import { ApiResponse, PressReleasesResponse } from "@tickermoves/shared-types";
 
 type PressReleaseCountResult = { total: number };
 
@@ -28,5 +29,5 @@ export const fetchPressReleases = async (limit: number, page: number) => {
         total,
         totalPages: Math.ceil(total / limit),
         data: pressReleases,
-    };
+    } as PressReleasesResponse
 };
