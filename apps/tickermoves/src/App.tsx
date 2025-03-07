@@ -8,14 +8,28 @@ import PressReleaseCard from './components/press-release-card';
 // initializing notification listener.
 initNotifications();
 
+const PAGE_SIZE = 10;
+
 function App(): React.JSX.Element {
-  const [pressReleases, setPressReleases] = useState<PressRelease[]>();
+  const [pressReleases, setPressReleases] = useState<PressRelease[]>([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   const fetchPressReleases = async () => {
-    // TODO: Render releases in list
-    const response = await News.getLatestPressReleases();
-    console.log('response', response);
-    setPressReleases(response?.data?.data || []);
+    if (loading || !hasMore) { return; }
+
+    setLoading(true);
+    const response = await News.getLatestPressReleases({ page });
+    const data = response?.data?.data || [];
+    setPressReleases((prevData) => [...prevData, ...data]);
+    setPage(page + 1);
+
+    if (data.length < PAGE_SIZE) {
+      setHasMore(false);
+    }
+
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -30,6 +44,8 @@ function App(): React.JSX.Element {
         data={pressReleases}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => <PressReleaseCard item={item} />}
+        onEndReached={fetchPressReleases}
+        onEndReachedThreshold={0.2}
       />
     </View>
   );
