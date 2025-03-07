@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPressReleases = void 0;
 const pressReleaseService_1 = require("../services/pressReleaseService");
+const strings_1 = require("../utils/strings");
 const getPressReleases = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const limit = parseInt(req.query.limit) || 10;
@@ -18,7 +19,7 @@ const getPressReleases = (req, res) => __awaiter(void 0, void 0, void 0, functio
         const pressReleases = yield (0, pressReleaseService_1.fetchPressReleases)(limit, page);
         res.json({
             success: true,
-            data: pressReleases,
+            data: (0, strings_1.camelize)(pressReleases),
         });
     }
     catch (error) {
