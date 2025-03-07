@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { ApiResponse, PressReleasesResponse } from "@tickermoves/shared-types";
 import { fetchPressReleases } from "../services/pressReleaseService";
-import { camelize } from "../utils/strings";
 
 export const getPressReleases = async (req: Request, res: Response<ApiResponse<PressReleasesResponse>>): Promise<void> => {
     try {
@@ -11,7 +10,7 @@ export const getPressReleases = async (req: Request, res: Response<ApiResponse<P
 
         res.json({
             success: true,
-            data: camelize(pressReleases),
+            data: pressReleases,
         });
     } catch (error) {
         console.error("Error fetching press releases:", error);

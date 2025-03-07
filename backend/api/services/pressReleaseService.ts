@@ -1,6 +1,6 @@
 import { RowDataPacket } from "mysql2";
 import pool from "../config/db";
-import { ApiResponse, PressReleasesResponse } from "@tickermoves/shared-types";
+import { PressReleasesResponse } from "@tickermoves/shared-types";
 
 type PressReleaseCountResult = { total: number };
 
@@ -8,7 +8,7 @@ export const fetchPressReleases = async (limit: number, page: number) => {
     const offset = (page - 1) * limit;
 
     const query = `
-        SELECT *
+        SELECT id, tickers, title, url, created, analysis, analysis_reasoning AS analysisReasoning
         FROM releases
         ORDER BY created DESC
         LIMIT ? OFFSET ?;

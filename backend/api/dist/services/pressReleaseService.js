@@ -17,7 +17,7 @@ const db_1 = __importDefault(require("../config/db"));
 const fetchPressReleases = (limit, page) => __awaiter(void 0, void 0, void 0, function* () {
     const offset = (page - 1) * limit;
     const query = `
-        SELECT *
+        SELECT id, tickers, title, url, created, analysis, analysis_reasoning AS analysisReasoning
         FROM releases
         ORDER BY created DESC
         LIMIT ? OFFSET ?;
