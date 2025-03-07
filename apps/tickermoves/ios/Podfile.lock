@@ -1585,10 +1585,10 @@ PODS:
     - React-logger (= 0.78.0)
     - React-perflogger (= 0.78.0)
     - React-utils (= 0.78.0)
-  - RNFBApp (21.11.0):
+  - RNFBApp (21.12.0):
     - Firebase/CoreOnly (= 11.8.0)
     - React-Core
-  - RNFBMessaging (21.11.0):
+  - RNFBMessaging (21.12.0):
     - Firebase/Messaging (= 11.8.0)
     - FirebaseCoreExtension
     - React-Core
@@ -1897,8 +1897,8 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: a1fb08dfdc7ebc387b2e54cfc9decd283ed821d8
   ReactCodegen: 0f8899ac1bad260bf3b362ee848ef67a70b5a306
   ReactCommon: a30b578194de911fbe1698efb8247bfe4cb6abff
-  RNFBApp: b5626640e0f4b4fe5be4f44375df703c0d62ee4b
-  RNFBMessaging: 8e38f5ca846497f8a9c91d33f311c00ca52d119c
+  RNFBApp: 3ecdb44edd5cce785ea9b796682766889962a5fd
+  RNFBMessaging: 65b436add429c5fd8fed20643c3a92916d275444
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: d89d04d86b5af18317f481166dccc48213d26927
 
