@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, RefreshControl, View } from 'react-native';
 import { PressRelease } from '@tickermoves/shared-types';
-import { initNotifications } from './utils/notifications';
+import { initNotifications, saveFirebaseDeviceToken } from './utils/notifications';
 import News from './data/news';
 import PressReleaseCard from './components/press-release-card';
 
@@ -39,8 +39,8 @@ function App(): React.JSX.Element {
     fetchPressReleases(true);
 
   useEffect(() => {
-    // Grab press releases
     fetchPressReleases();
+    saveFirebaseDeviceToken();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
