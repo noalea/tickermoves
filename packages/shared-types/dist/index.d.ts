@@ -19,4 +19,9 @@ export interface PressReleasesResponse {
     totalPages: number;
     limit: number;
 }
+export interface SaveDeviceTokenResponse {
+    token: string;
+}
+export declare const estTimeZone = "America/Toronto";
+export declare function getCurrentTimestamp(): string;
 //# sourceMappingURL=index.d.ts.map

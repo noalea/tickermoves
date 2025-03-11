@@ -21,3 +21,7 @@ export interface PressReleasesResponse {
   totalPages: number;
   limit: number;
 }
+
+export interface SaveDeviceTokenResponse {
+  token: string;
+}
