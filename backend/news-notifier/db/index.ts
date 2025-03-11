@@ -29,3 +29,14 @@ export async function recordRelease(article: NasdaqNews & (ArticleAnalysis | und
     console.error('Database error:', error);
   }
 }
+
+export async function grabNotificationTokens() {
+  const db = Database.getInstance();
+
+  try {
+    const results = await db.query<{token: string}>("SELECT token from notification_tokens");
+    return results?.map(t => t.token);
+  } catch (error) {
+    console.error('Database error:', error);
+  }
+}

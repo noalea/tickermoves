@@ -14,23 +14,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.notifyUsers = notifyUsers;
 const dotenv_1 = __importDefault(require("dotenv"));
-const twilio_1 = __importDefault(require("twilio"));
-const utils_1 = require("../utils");
+const firebase_admin_1 = __importDefault(require("firebase-admin"));
+const serviceAccountKey_json_1 = __importDefault(require("../serviceAccountKey.json"));
+const db_1 = require("../db");
 dotenv_1.default.config();
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = (0, twilio_1.default)(accountSid, authToken);
+firebase_admin_1.default.initializeApp({
+    credential: firebase_admin_1.default.credential.cert(serviceAccountKey_json_1.default),
+});
+/**
+ * Sends a push notification to multiple users.
+ * @param data - Nasdaq article and analysis object.
+ * @returns Promise with success or error message.
+ */
 function notifyUsers(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        const tickers = data.related_symbols.map(item => `$${item.split('|')[0].toUpperCase()}`).join(', ');
-        const body = `[${tickers}]\n${data.title}\n${(0, utils_1.nasdaqUrl)(data.url)}\n\nWill the price go up based on the news? ${data.analysis}\n\n${data.reasoning}`;
-        client.messages
-            .create({
-            body,
-            from: process.env.TWILIO_PHONE_NUMBER,
-            to: process.env.MY_PHONE_NUMBER || ''
-        })
-            .then(message => console.log(`Message sent! ID: ${message.sid}`))
-            .catch(error => console.error(error));
+        try {
+            const tokens = yield (0, db_1.grabNotificationTokens)();
+            if (tokens === null || tokens === void 0 ? void 0 : tokens.length) {
+                const tickers = data.related_symbols
+                    .map(item => `#${item.split('|')[0].toUpperCase()}`)
+                    .join(' ');
+                const message = {
+                    notification: { title: tickers, body: data.title },
+                    data: data,
+                    tokens,
+                };
+                const response = yield firebase_admin_1.default.messaging().sendEachForMulticast(message);
+                // Log failed tokens
+                const failedTokens = tokens.filter((_, index) => response.responses[index].error);
+                if (failedTokens.length) {
+                    console.error('Failed tokens:', failedTokens);
+                }
+                return { success: true, message: 'Notifications sent successfully', failedTokens };
+            }
+            return { success: false, message: 'Failed to grab tokens from database' };
+        }
+        catch (error) {
+            console.error('Error sending notification:', error);
+            return { success: false, message: 'Failed to send notifications', error };
+        }
     });
 }

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isNewRelease = isNewRelease;
 exports.recordRelease = recordRelease;
+exports.grabNotificationTokens = grabNotificationTokens;
 const database_1 = __importDefault(require("./database"));
 const utils_1 = require("../utils");
 function isNewRelease(article) {
@@ -37,6 +38,18 @@ function recordRelease(article) {
             const created = (0, utils_1.getCurrentTimestamp)();
             const tickers = article.related_symbols.toString().replace(/\|stocks/g, '');
             yield db.query("INSERT INTO releases (tickers, title, url, created, analysis, analysis_reasoning) VALUES (?, ?, ?, ?, ?, ?)", [tickers, article.title, url, created, article.analysis, article.reasoning]);
+        }
+        catch (error) {
+            console.error('Database error:', error);
+        }
+    });
+}
+function grabNotificationTokens() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const db = database_1.default.getInstance();
+        try {
+            const results = yield db.query("SELECT token from notification_tokens");
+            return results === null || results === void 0 ? void 0 : results.map(t => t.token);
         }
         catch (error) {
             console.error('Database error:', error);

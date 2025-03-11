@@ -15,13 +15,13 @@
     "axios": "^1.7.9",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^16.4.7",
+    "firebase-admin": "^13.2.0",
     "fs": "^0.0.1-security",
     "mysql2": "^3.12.0",
     "node-fetch": "^2.7.0",
     "openai": "^4.85.1",
     "puppeteer": "^24.3.0",
-    "rss-parser": "^3.13.0",
-    "twilio": "^5.4.5"
+    "rss-parser": "^3.13.0"
   },
   "devDependencies": {
     "@types/node": "^22.13.4",
