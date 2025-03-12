@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import admin from 'firebase-admin';
 import serviceAccount from '../serviceAccountKey.json';
 import { grabNotificationTokens } from "../db";
+import { nasdaqUrl } from "../utils";
 
 import type { ArticleAnalysis, NasdaqNews } from "../types";
 
@@ -23,11 +24,21 @@ export async function notifyUsers(data: NasdaqNews & ArticleAnalysis) {
     if (tokens?.length) {
       const tickers = data.related_symbols
         .map(item => `#${item.split('|')[0].toUpperCase()}`)
-        .join(' ')
+        .join(' ');
+
+      const { url, title, created, ago, analysis, reasoning } = data;
 
       const message = {
         notification: { title: tickers, body: data.title },
-        data: data as any,
+        data: {
+          url: nasdaqUrl(url),
+          tickers,
+          title,
+          created,
+          ago,
+          analysis,
+          reasoning
+        },
         tokens,
       };
   

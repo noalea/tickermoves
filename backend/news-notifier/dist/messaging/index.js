@@ -17,6 +17,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const serviceAccountKey_json_1 = __importDefault(require("../serviceAccountKey.json"));
 const db_1 = require("../db");
+const utils_1 = require("../utils");
 dotenv_1.default.config();
 firebase_admin_1.default.initializeApp({
     credential: firebase_admin_1.default.credential.cert(serviceAccountKey_json_1.default),
@@ -34,12 +35,22 @@ function notifyUsers(data) {
                 const tickers = data.related_symbols
                     .map(item => `#${item.split('|')[0].toUpperCase()}`)
                     .join(' ');
+                const { url, title, created, ago, analysis, reasoning } = data;
                 const message = {
                     notification: { title: tickers, body: data.title },
-                    data: data,
+                    data: {
+                        url: (0, utils_1.nasdaqUrl)(url),
+                        tickers,
+                        title,
+                        created,
+                        ago,
+                        analysis,
+                        reasoning
+                    },
                     tokens,
                 };
                 const response = yield firebase_admin_1.default.messaging().sendEachForMulticast(message);
+                console.log('response', response.responses[3].error);
                 // Log failed tokens
                 const failedTokens = tokens.filter((_, index) => response.responses[index].error);
                 if (failedTokens.length) {
