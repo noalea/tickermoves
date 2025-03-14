@@ -302,7 +302,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tickermoves;
 				PRODUCT_NAME = tickermoves;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "tickermoves Production Profile";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "TickerMoves Production Profile";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -337,7 +337,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tickermoves;
 				PRODUCT_NAME = tickermoves;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "tickermoves Production Profile";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "TickerMoves Production Profile";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
