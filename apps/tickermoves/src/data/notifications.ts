@@ -1,11 +1,12 @@
 import { ApiResponse, SaveDeviceTokenResponse } from '@tickermoves/shared-types';
 import { apiUrl, headers } from '../constants/index';
 import { handleCatchError } from '../utils/errors';
+import { API_KEY } from '@env';
 
 const saveDeviceToken = async (token: string): Promise<ApiResponse<SaveDeviceTokenResponse>> => {
   try {
     const responseBlob = await fetch(
-      `${apiUrl}/notifications/token/${token}`,
+      `${apiUrl}/notifications/token/${token}?apiKey=${API_KEY}`,
       {
         method: 'POST',
         headers: headers,
