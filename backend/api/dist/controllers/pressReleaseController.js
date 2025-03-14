@@ -11,7 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPressReleases = void 0;
 const pressReleaseService_1 = require("../services/pressReleaseService");
+const utils_1 = require("../utils");
 const getPressReleases = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(0, utils_1.validateApiKey)(req.query.apiKey, res)) {
+        return;
+    }
     try {
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
@@ -20,10 +24,12 @@ const getPressReleases = (req, res) => __awaiter(void 0, void 0, void 0, functio
             success: true,
             data: pressReleases,
         });
+        return;
     }
     catch (error) {
         console.error("Error fetching press releases:", error);
         res.status(500).json({ success: false, message: "Server error" });
+        return;
     }
 });
 exports.getPressReleases = getPressReleases;

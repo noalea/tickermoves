@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
 import { ApiResponse, SaveDeviceTokenResponse } from "@tickermoves/shared-types";
 import { storeDeviceToken } from "../services/notificationService";
+import { validateApiKey } from "../utils";
 
 export const saveDeviceToken = async (req: Request, res: Response<ApiResponse<SaveDeviceTokenResponse>>): Promise<void> => {
+  if (!validateApiKey(req.query.apiKey as string, res)) {
+    return;
+  }
+
   try {
     const { token } = req.params;
 

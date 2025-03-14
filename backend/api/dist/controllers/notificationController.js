@@ -11,7 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveDeviceToken = void 0;
 const notificationService_1 = require("../services/notificationService");
+const utils_1 = require("../utils");
 const saveDeviceToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(0, utils_1.validateApiKey)(req.query.apiKey, res)) {
+        return;
+    }
     try {
         const { token } = req.params;
         if (!token) {
