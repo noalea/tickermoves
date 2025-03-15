@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
+const connect_timeout_1 = __importDefault(require("connect-timeout"));
 const pressReleaseRoutes_1 = __importDefault(require("./routes/pressReleaseRoutes"));
 const notificationRoutes_1 = __importDefault(require("./routes/notificationRoutes"));
 const db_1 = __importDefault(require("./config/db"));
@@ -23,9 +24,16 @@ const app = (0, express_1.default)();
 // Middleware
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+app.use((0, connect_timeout_1.default)("10s"));
+app.use(haltOnTimedout);
 // Routes
 app.use("/press-releases", pressReleaseRoutes_1.default);
 app.use("/notifications", notificationRoutes_1.default);
+// Timeout handler function
+function haltOnTimedout(req, _, next) {
+    if (!req.timedout)
+        next();
+}
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
