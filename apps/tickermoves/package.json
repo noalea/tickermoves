@@ -14,8 +14,6 @@
   "dependencies": {
     "@react-native-firebase/app": "^21.11.0",
     "@react-native-firebase/messaging": "^21.11.0",
-    "@react-native/gradle-plugin": "^0.78.0",
-    "@tickermoves/shared-types": "workspace:*",
     "react": "19.0.0",
     "react-native": "0.78.0",
     "react-native-dotenv": "^3.4.11",

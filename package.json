@@ -2,6 +2,9 @@
   "name": "tickermoves",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "install:tickermoves": "npm install --prefix apps/tickermoves"
+  },
   "workspaces": [
     "apps/*",
     "backend/*",

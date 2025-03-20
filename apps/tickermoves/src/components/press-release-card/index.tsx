@@ -1,10 +1,11 @@
 import React from 'react';
 import { Linking, View } from 'react-native';
-import { PressRelease } from '@tickermoves/shared-types';
-import styles from './styles';
-import Typography from '../typography';
-import { Colors } from '../../styles';
 import { Analysis } from '../../constants';
+import { Colors } from '../../styles';
+import Typography from '../typography';
+import styles from './styles';
+
+import type { PressRelease } from '@tickermoves/shared-types';
 
 interface Props {
   item: PressRelease
