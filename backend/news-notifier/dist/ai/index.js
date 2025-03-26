@@ -23,9 +23,10 @@ const openai = new openai_1.default({ apiKey: process.env.OPENAI_API_KEY });
 function analyzePressRelease(_a) {
     return __awaiter(this, arguments, void 0, function* ({ url, ticker }) {
         var _b, _c, _d, _e;
+        let browser = null;
         try {
             // Fetch press release content
-            const browser = yield puppeteer_1.default.launch(utils_1.puppeteerLaunchOptions);
+            browser = yield puppeteer_1.default.launch(utils_1.puppeteerLaunchOptions);
             const page = yield browser.newPage();
             // Navigate to the desired web page
             yield page.setUserAgent(constants_1.headers["User-Agent"]);
@@ -35,6 +36,7 @@ function analyzePressRelease(_a) {
                 return (_b = (_a = document.querySelector('article')) === null || _a === void 0 ? void 0 : _a.innerText) === null || _b === void 0 ? void 0 : _b.trim();
             });
             yield browser.close();
+            browser = null;
             // Ask OpenAI for analysis
             const prompt = `
       Here's a press release:
@@ -58,6 +60,17 @@ function analyzePressRelease(_a) {
         catch (error) {
             console.error("Error analyzing press release: ", error);
             return { analysis: '', reasoning: '' };
+        }
+        finally {
+            // Always close browser if it's still open
+            if (browser) {
+                try {
+                    yield browser.close();
+                }
+                catch (err) {
+                    console.error("Error closing browser:", err);
+                }
+            }
         }
     });
 }

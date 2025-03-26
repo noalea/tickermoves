@@ -50,7 +50,6 @@ function notifyUsers(data) {
                     tokens,
                 };
                 const response = yield firebase_admin_1.default.messaging().sendEachForMulticast(message);
-                console.log('response', response.responses[3].error);
                 // Log failed tokens
                 const failedTokens = tokens.filter((_, index) => response.responses[index].error);
                 if (failedTokens.length) {

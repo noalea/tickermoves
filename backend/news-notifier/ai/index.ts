@@ -16,9 +16,11 @@ interface Props {
 }
 
 export async function analyzePressRelease({ url, ticker }: Props) {
+  let browser = null;
+
   try {
     // Fetch press release content
-    const browser = await puppeteer.launch(puppeteerLaunchOptions);
+    browser = await puppeteer.launch(puppeteerLaunchOptions);
     const page = await browser.newPage();
 
     // Navigate to the desired web page
@@ -29,7 +31,7 @@ export async function analyzePressRelease({ url, ticker }: Props) {
     });
 
     await browser.close();
-
+    browser = null;
     // Ask OpenAI for analysis
     const prompt = `
       Here's a press release:
@@ -54,5 +56,14 @@ export async function analyzePressRelease({ url, ticker }: Props) {
   } catch (error) {
     console.error("Error analyzing press release: ", error);
     return { analysis: '' as ArticleAnalysis['analysis'], reasoning: '' };
+  } finally {
+    // Always close browser if it's still open
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (err) {
+        console.error("Error closing browser:", err);
+      }
+    }
   }
 }

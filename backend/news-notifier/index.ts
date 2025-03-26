@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+import admin from 'firebase-admin';
 import Database from "./db/database";
 import { headers } from "./constants";
 import { isNewRelease, recordRelease } from "./db";
@@ -17,9 +18,13 @@ import type { NasdaqNews } from "types";
 // Notify user
 
 async function fetchLatestPressReleases(): Promise<void> {
+  console.log('Memory usage at start:', process.memoryUsage());
+  const db = Database.getInstance();
+  let browser = null;
+
   try {
     const url = 'https://www.nasdaq.com/api/news/topic/press_release';
-    const browser = await puppeteer.launch(puppeteerLaunchOptions);
+    browser = await puppeteer.launch(puppeteerLaunchOptions);
     const page = await browser.newPage();
 
     // Navigate to the desired web page
@@ -30,6 +35,7 @@ async function fetchLatestPressReleases(): Promise<void> {
     });
 
     await browser.close();
+    browser = null;
 
     const news: NasdaqNews[] = JSON.parse(data)?.data?.rows || [];
 
@@ -51,18 +57,53 @@ async function fetchLatestPressReleases(): Promise<void> {
 
         // notify user
         await notifyUsers({ ...article, ...analysis });
-      } else {
-        // do nothing
-        continue;
       }
-    };
-
-    const db = Database.getInstance();
-    db.close();
+    }
 
   } catch (error) {
     console.error("Error fetching data:", error);
+  } finally {
+    // Always close browser if it's still open
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (err) {
+        console.error("Error closing browser:", err);
+      }
+    }
+    
+    // Always close database connection
+    try {
+      db.close();
+    } catch (err) {
+      console.error("Error closing database connection:", err);
+    }
   }
 }
 
-fetchLatestPressReleases();
+async function cleanup() {
+  try {
+    // Close Firebase Admin app
+    await admin.app().delete();
+    console.log('Firebase Admin app closed');
+  } catch (error) {
+    console.error('Error closing Firebase Admin app:', error);
+  }
+}
+
+fetchLatestPressReleases()
+  .then(cleanup)
+  .then(() => {
+    console.log('Memory usage at end:', process.memoryUsage());
+
+    // Give time for connections to close properly
+    setTimeout(() => {
+      process.exit(0);
+    }, 1000);
+  })
+  .catch(error => {
+    console.error("Unhandled error:", error);
+    cleanup().finally(() => {
+      process.exit(1);
+    });
+  });

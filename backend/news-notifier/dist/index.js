@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_1 = __importDefault(require("puppeteer"));
+const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const database_1 = __importDefault(require("./db/database"));
 const constants_1 = require("./constants");
 const db_1 = require("./db");
@@ -28,9 +29,12 @@ const messaging_1 = require("./messaging");
 function fetchLatestPressReleases() {
     return __awaiter(this, void 0, void 0, function* () {
         var _a, _b;
+        console.log('Memory usage at start:', process.memoryUsage());
+        const db = database_1.default.getInstance();
+        let browser = null;
         try {
             const url = 'https://www.nasdaq.com/api/news/topic/press_release';
-            const browser = yield puppeteer_1.default.launch(utils_1.puppeteerLaunchOptions);
+            browser = yield puppeteer_1.default.launch(utils_1.puppeteerLaunchOptions);
             const page = yield browser.newPage();
             // Navigate to the desired web page
             yield page.setUserAgent(constants_1.headers["User-Agent"]);
@@ -39,6 +43,7 @@ function fetchLatestPressReleases() {
                 return document.body.innerText;
             });
             yield browser.close();
+            browser = null;
             const news = ((_b = (_a = JSON.parse(data)) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.rows) || [];
             for (const article of news) {
                 // Skip articles without tagged tickers
@@ -56,18 +61,55 @@ function fetchLatestPressReleases() {
                     // notify user
                     yield (0, messaging_1.notifyUsers)(Object.assign(Object.assign({}, article), analysis));
                 }
-                else {
-                    // do nothing
-                    continue;
-                }
             }
-            ;
-            const db = database_1.default.getInstance();
-            db.close();
         }
         catch (error) {
             console.error("Error fetching data:", error);
         }
+        finally {
+            // Always close browser if it's still open
+            if (browser) {
+                try {
+                    yield browser.close();
+                }
+                catch (err) {
+                    console.error("Error closing browser:", err);
+                }
+            }
+            // Always close database connection
+            try {
+                db.close();
+            }
+            catch (err) {
+                console.error("Error closing database connection:", err);
+            }
+        }
     });
 }
-fetchLatestPressReleases();
+function cleanup() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            // Close Firebase Admin app
+            yield firebase_admin_1.default.app().delete();
+            console.log('Firebase Admin app closed');
+        }
+        catch (error) {
+            console.error('Error closing Firebase Admin app:', error);
+        }
+    });
+}
+fetchLatestPressReleases()
+    .then(cleanup)
+    .then(() => {
+    console.log('Memory usage at end:', process.memoryUsage());
+    // Give time for connections to close properly
+    setTimeout(() => {
+        process.exit(0);
+    }, 1000);
+})
+    .catch(error => {
+    console.error("Unhandled error:", error);
+    cleanup().finally(() => {
+        process.exit(1);
+    });
+});
